@@ -62,6 +62,7 @@ function Header() {
 	const handleLogout = () => {
 		queryClient.removeQueries({ queryKey: ['user'] });
 		setUser(null);
+		toast.success('Você foi desconectado');
 	};
 
 	const handleExcludUser = () => {
@@ -75,95 +76,75 @@ function Header() {
 					{user ? `Olá ${user.name}` : 'Cadastre-se primeiro'}
 				</h1>
 			</div>
-			<div>
-				<nav className="flex justify-between items-stretch gap-2">
-					<ul className="flex items-center gap-2">
-						{user ? (
-							<>
-								<li className="flex items-center">
-									<AlertDialog>
-										<AlertDialogTrigger>
-											<button
-												type="button"
-												className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+			<nav className="flex items-center">
+				<ul className="flex items-center gap-2">
+					{user ? (
+						<>
+							<li>
+								<AlertDialog>
+									<AlertDialogTrigger className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+										<LogOut className="w-6 h-6" />
+									</AlertDialogTrigger>
+									<AlertDialogContent>
+										<AlertDialogHeader>
+											<AlertDialogTitle>
+												Você deseja se desconectar?
+											</AlertDialogTitle>
+											<AlertDialogDescription>
+												Ao confirmar, você irá se desconectar de sua conta.
+											</AlertDialogDescription>
+										</AlertDialogHeader>
+										<AlertDialogFooter>
+											<AlertDialogCancel>Cancelar</AlertDialogCancel>
+											<AlertDialogAction
+												onClick={handleLogout}
+												className="bg-red-500 hover:bg-red-600"
 											>
-												<LogOut className="w-6 h-6" />
-											</button>
-										</AlertDialogTrigger>
-										<AlertDialogContent className="bg-white text-gray-900 border border-gray-200 dark:bg-dark-blue dark:text-light-text dark:border-gray-700">
-											<AlertDialogHeader>
-												<AlertDialogTitle className="text-lg font-semibold">
-													Você deseja se desconectar?
-												</AlertDialogTitle>
-												<AlertDialogDescription className="text-gray-600 dark:text-gray-300">
-													Ao confirmar, você irá se desconectar de sua conta.
-												</AlertDialogDescription>
-											</AlertDialogHeader>
-											<AlertDialogFooter>
-												<AlertDialogCancel className="bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-700 dark:text-light-text dark:hover:bg-gray-600">
-													Cancelar
-												</AlertDialogCancel>
-												<AlertDialogAction
-													onClick={handleLogout}
-													className="bg-red-500 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
-												>
-													Continuar
-												</AlertDialogAction>
-											</AlertDialogFooter>
-										</AlertDialogContent>
-									</AlertDialog>
-								</li>
-								<li className="flex items-center">
-									<AlertDialog>
-										<AlertDialogTrigger>
-											<button
-												type="button"
-												className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+												Continuar
+											</AlertDialogAction>
+										</AlertDialogFooter>
+									</AlertDialogContent>
+								</AlertDialog>
+							</li>
+							<li>
+								<AlertDialog>
+									<AlertDialogTrigger className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+										<UserX className="w-6 h-6" />
+									</AlertDialogTrigger>
+									<AlertDialogContent>
+										<AlertDialogHeader>
+											<AlertDialogTitle>
+												Você deseja excluir sua conta?
+											</AlertDialogTitle>
+											<AlertDialogDescription>
+												Ao confirmar, você irá excluir sua conta
+												permanentemente.
+											</AlertDialogDescription>
+										</AlertDialogHeader>
+										<AlertDialogFooter>
+											<AlertDialogCancel>Cancelar</AlertDialogCancel>
+											<AlertDialogAction
+												onClick={handleExcludUser}
+												className="bg-red-500 hover:bg-red-600"
 											>
-												<UserX className="w-6 h-6" />
-											</button>
-										</AlertDialogTrigger>
-										<AlertDialogContent className="bg-white text-gray-900 border border-gray-200 dark:bg-dark-blue dark:text-light-text dark:border-gray-700">
-											<AlertDialogHeader>
-												<AlertDialogTitle className="text-lg font-semibold">
-													Você deseja excluir sua conta?
-												</AlertDialogTitle>
-												<AlertDialogDescription className="text-gray-600 dark:text-gray-300">
-													Ao confirmar, você irá excluir sua conta
-													permanentemente.
-												</AlertDialogDescription>
-											</AlertDialogHeader>
-											<AlertDialogFooter>
-												<AlertDialogCancel className="bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-700 dark:text-light-text dark:hover:bg-gray-600">
-													Cancelar
-												</AlertDialogCancel>
-												<AlertDialogAction
-													onClick={handleExcludUser}
-													className="bg-red-500 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
-												>
-													Excluir
-												</AlertDialogAction>
-											</AlertDialogFooter>
-										</AlertDialogContent>
-									</AlertDialog>
-								</li>
-							</>
-						) : (
-							<>
-								<li className="flex items-stretch">
-									<CreateUser />
-								</li>
-								<li className="flex items-stretch">
-									<Login />
-								</li>
-							</>
-						)}
-					</ul>
-					<div className="flex items-stretch">
+												Excluir
+											</AlertDialogAction>
+										</AlertDialogFooter>
+									</AlertDialogContent>
+								</AlertDialog>
+							</li>
+						</>
+					) : (
+						<>
+							<CreateUser />
+							<Login />
+						</>
+					)}
+					<li>
 						<ThemeSwitch />
-					</div>
-				</nav>
-			</div>
+					</li>
+				</ul>
+			</nav>
 		</header>
 	);
 }

@@ -51,9 +51,7 @@ function Login() {
 		onSuccess: (response: AxiosResponse<ApiSuccessResponse>) => {
 			const user = response.data;
 			if (user.user) {
-				toast.success('Login realizado com sucesso!', {
-					transition: Zoom,
-				});
+				toast.success('Login realizado com sucesso!');
 				queryClient.setQueryData(['user'], user.user);
 				setDialogState(false);
 			} else {
@@ -99,73 +97,73 @@ function Login() {
 
 	return (
 		<>
-			<Dialog open={dialogState} onOpenChange={setDialogState}>
-				<DialogTrigger asChild>
-					<button
-						type="button"
-						className="h-full flex items-center justify-center px-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
-					>
-						<LogIn className="w-5 h-5" />
-					</button>
-				</DialogTrigger>
+			<li className="flex justify-center items-center w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+				<Dialog open={dialogState} onOpenChange={setDialogState}>
+					<DialogTrigger>
+						<LogIn className="w-6 h-6" />
+					</DialogTrigger>
 
-				<DialogContent className="bg-white dark:bg-dark-blue p-6 rounded-lg shadow-lg">
-					<DialogHeader>
-						<DialogTitle className="text-xl font-bold text-dark-text dark:text-light-text">
-							Entrar
-						</DialogTitle>
-						<DialogDescription>
-							Preencha os campos abaixo para entrar em sua conta.
-						</DialogDescription>
-					</DialogHeader>
+					<DialogContent className="bg-white dark:bg-dark-blue p-6 rounded-lg shadow-lg">
+						<DialogHeader>
+							<DialogTitle className="text-xl font-bold text-dark-text dark:text-light-text">
+								Entrar
+							</DialogTitle>
+							<DialogDescription>
+								Preencha os campos abaixo para entrar em sua conta.
+							</DialogDescription>
+						</DialogHeader>
 
-					{mutation.isPending ? (
-						<LoadingSpinner />
-					) : (
-						<form className="mt-4 space-y-4" onSubmit={handleUserCreateSubmit}>
-							<div>
-								<label
-									htmlFor="email"
-									className="block text-sm font-medium text-dark-text dark:text-light-text"
-								>
-									Email
-								</label>
-								<input
-									type="text"
-									name="email"
-									id="email"
-									className="w-full px-3 py-2 border rounded-lg bg-light-gray dark:bg-medium-blue text-dark-text dark:text-light-text"
-									placeholder="Digite o email"
-								/>
-							</div>
-
-							<div>
-								<label
-									htmlFor="password"
-									className="block text-sm font-medium text-dark-text dark:text-light-text"
-								>
-									Senha
-								</label>
-								<input
-									type="password"
-									id="password"
-									name="password"
-									className="w-full px-3 py-2 border rounded-lg bg-light-gray dark:bg-medium-blue text-dark-text dark:text-light-text"
-									placeholder="Digite a senha"
-								/>
-							</div>
-
-							<button
-								type="submit"
-								className="w-full bg-primary-blue text-white py-2 rounded-lg hover:bg-secondary-blue transition-colors"
-								disabled={mutation.isPending}
+						{mutation.isPending ? (
+							<LoadingSpinner />
+						) : (
+							<form
+								className="mt-4 space-y-4"
+								onSubmit={handleUserCreateSubmit}
 							>
-								{mutation.isPending ? 'Entrando...' : 'Entrar'}
-							</button>
-						</form>
-					)}
-				</DialogContent>
-			</Dialog>
+								<div>
+									<label
+										htmlFor="email"
+										className="block text-sm font-medium text-dark-text dark:text-light-text"
+									>
+										Email
+									</label>
+									<input
+										type="text"
+										name="email"
+										id="email"
+										className="w-full px-3 py-2 border rounded-lg bg-light-gray dark:bg-medium-blue text-dark-text dark:text-light-text"
+										placeholder="Digite o email"
+									/>
+								</div>
+
+								<div>
+									<label
+										htmlFor="password"
+										className="block text-sm font-medium text-dark-text dark:text-light-text"
+									>
+										Senha
+									</label>
+									<input
+										type="password"
+										id="password"
+										name="password"
+										className="w-full px-3 py-2 border rounded-lg bg-light-gray dark:bg-medium-blue text-dark-text dark:text-light-text"
+										placeholder="Digite a senha"
+									/>
+								</div>
+
+								<button
+									type="submit"
+									className="w-full bg-primary-blue text-white py-2 rounded-lg hover:bg-secondary-blue transition-colors"
+									disabled={mutation.isPending}
+								>
+									{mutation.isPending ? 'Entrando...' : 'Entrar'}
+								</button>
+							</form>
+						)}
+					</DialogContent>
+				</Dialog>
+			</li>
 		</>
 	);
 }
