@@ -58,7 +58,7 @@ function CreateTask() {
 
 	const user = queryClient.getQueryData<userCache>(['user']);
 
-	if (!user) return toast.error('Faça o login antes');
+	if (!user) return toast.error('Primeiro faça login');
 
 	const mutation = useMutation({
 		mutationFn: async (newTask: z.infer<typeof FormSchemaMet>) => {
@@ -68,6 +68,7 @@ function CreateTask() {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['tasks'] });
+			form.reset();
 			setDialogState(false);
 			toast.success('Tarefa criada com sucesso!');
 		},
