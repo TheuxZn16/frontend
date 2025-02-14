@@ -1,6 +1,6 @@
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Header from './components/Header';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import CreateTask from './components/CreateTask';
 import {
@@ -15,7 +15,7 @@ import {
 import axios from 'axios';
 import { Check, Edit, X } from 'lucide-react';
 import { Toggle } from './components/ui/toggle';
-import ExcludTaskAlert from './components/ExcludTaskAlert';
+import ExcludTaskAlert from './components/ExcludTaskAlert/index';
 
 interface User {
 	id: string;
@@ -26,7 +26,7 @@ interface User {
 
 interface Task {
 	description: string;
-	dueDate: Date;
+	dueDate: string;
 	id: string;
 	isCompleted: boolean;
 	title: string;
@@ -34,10 +34,10 @@ interface Task {
 }
 
 function App() {
-	const [user, setUser] = useState<User | null>(null);
-	const [tasks, setTasks] = useState<Task[]>([]);
 	const queryClient = useQueryClient();
+	const [user, setUser] = useState<User | null>(null);
 
+	// Obtendo o usuário diretamente do cache do react-query
 	const { data: userData } = useQuery({
 		queryKey: ['user'],
 		queryFn: async () => {
@@ -45,10 +45,15 @@ function App() {
 		},
 	});
 
-	const { data: tasksData } = useQuery({
+	useEffect(() => {
+		setUser(userData || null);
+	}, [userData]);
+
+	// Buscar tarefas do usuário
+	const { data: tasks = [], isLoading } = useQuery<Task[]>({
 		queryKey: ['tasks'],
 		queryFn: async () => {
-			if (!user) return null;
+			if (!user) return [];
 			const response = await axios.get(
 				'https://to-do-list-u0q3.onrender.com/tasks',
 				{
@@ -60,15 +65,26 @@ function App() {
 		enabled: !!user,
 	});
 
-	useEffect(() => {
-		setUser(userData || null);
-	}, [userData]);
-
-	useEffect(() => {
-		if (tasksData) {
-			setTasks(tasksData);
-		}
-	}, [tasksData]);
+	// Mutação para atualizar a conclusão da tarefa
+	const { mutate: toggleTaskCompletion } = useMutation({
+		mutationKey: ['tasks'],
+		mutationFn: async (task: Task) => {
+			if (!user) throw new Error('Usuário não encontrado');
+			await axios.patch(
+				`https://to-do-list-u0q3.onrender.com/tasks/${task.id}`,
+				{ isCompleted: !task.isCompleted }, // Atualiza o estado da tarefa
+				{
+					headers: { Authorization: `Bearer ${user.token}` },
+				},
+			);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['tasks'] });
+		},
+		onError: () => {
+			toast.error('Erro ao atualizar a tarefa.');
+		},
+	});
 
 	return (
 		<div>
@@ -85,7 +101,11 @@ function App() {
 						</div>
 
 						<div className="p-5 mt-10">
-							{tasks.length > 0 ? (
+							{isLoading ? (
+								<p className="text-center text-dark-text dark:text-light-text">
+									Carregando tarefas...
+								</p>
+							) : tasks.length > 0 ? (
 								<Table>
 									<TableCaption>Tarefas</TableCaption>
 									<TableHeader>
@@ -119,7 +139,7 @@ function App() {
 													<ExcludTaskAlert idTask={task.id} />
 												</TableCell>
 												<TableCell>
-													<Toggle>
+													<Toggle onClick={() => toggleTaskCompletion(task)}>
 														{task.isCompleted ? (
 															<X className="text-red-800" />
 														) : (
