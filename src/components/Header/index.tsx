@@ -63,6 +63,7 @@ function Header() {
 		queryClient.removeQueries({ queryKey: ['user'] });
 		setUser(null);
 		toast.success('Você foi desconectado');
+		setTimeout(() => location.reload(), 1000);
 	};
 
 	const handleExcludUser = () => {
