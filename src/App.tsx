@@ -13,9 +13,11 @@ import {
 	TableRow,
 } from './components/ui/table';
 import axios from 'axios';
-import { Check, Edit, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { Toggle } from './components/ui/toggle';
 import ExcludTaskAlert from './components/ExcludTaskAlert/index';
+import LoadingSpinner from './components/Loading';
+import EditTask from './components/EditTask';
 
 interface User {
 	id: string;
@@ -26,7 +28,7 @@ interface User {
 
 interface Task {
 	description: string;
-	dueDate: string;
+	dueDate: Date;
 	id: string;
 	isCompleted: boolean;
 	title: string;
@@ -37,7 +39,6 @@ function App() {
 	const queryClient = useQueryClient();
 	const [user, setUser] = useState<User | null>(null);
 
-	// Obtendo o usuário diretamente do cache do react-query
 	const { data: userData } = useQuery({
 		queryKey: ['user'],
 		queryFn: async () => {
@@ -49,7 +50,6 @@ function App() {
 		setUser(userData || null);
 	}, [userData]);
 
-	// Buscar tarefas do usuário
 	const { data: tasks = [], isLoading } = useQuery<Task[]>({
 		queryKey: ['tasks'],
 		queryFn: async () => {
@@ -65,14 +65,13 @@ function App() {
 		enabled: !!user,
 	});
 
-	// Mutação para atualizar a conclusão da tarefa
 	const { mutate: toggleTaskCompletion } = useMutation({
 		mutationKey: ['tasks'],
 		mutationFn: async (task: Task) => {
 			if (!user) throw new Error('Usuário não encontrado');
 			await axios.patch(
 				`https://to-do-list-u0q3.onrender.com/tasks/${task.id}`,
-				{ isCompleted: !task.isCompleted }, // Atualiza o estado da tarefa
+				{ isCompleted: !task.isCompleted },
 				{
 					headers: { Authorization: `Bearer ${user.token}` },
 				},
@@ -102,9 +101,7 @@ function App() {
 
 						<div className="p-5 mt-10">
 							{isLoading ? (
-								<p className="text-center text-dark-text dark:text-light-text">
-									Carregando tarefas...
-								</p>
+								<LoadingSpinner />
 							) : tasks.length > 0 ? (
 								<Table>
 									<TableCaption>Tarefas</TableCaption>
@@ -131,9 +128,7 @@ function App() {
 													{task.isCompleted ? 'Sim' : 'Não'}
 												</TableCell>
 												<TableCell>
-													<button type="button">
-														<Edit />
-													</button>
+													<EditTask task={task} />
 												</TableCell>
 												<TableCell>
 													<ExcludTaskAlert idTask={task.id} />
@@ -152,18 +147,12 @@ function App() {
 									</TableBody>
 								</Table>
 							) : (
-								<p className="text-center text-dark-text dark:text-light-text">
-									Você ainda não possui nenhuma tarefa. Crie agora!
-								</p>
+								<p>Você ainda não possui nenhuma tarefa. Crie agora!</p>
 							)}
 						</div>
 					</div>
 				) : (
-					<div>
-						<h1 className="lg:text-6xl text-3xl text-center text-dark-text dark:text-light-text">
-							Por favor, entre em sua conta para continuar...
-						</h1>
-					</div>
+					<p>Por favor, entre em sua conta para continuar...</p>
 				)}
 			</main>
 		</div>
