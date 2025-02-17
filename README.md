@@ -1,50 +1,93 @@
-# React + TypeScript + Vite
+# To-Do List App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and interactive To-Do List application built using **React**, **TypeScript**, **React Query**, and **Tailwind CSS**. The app allows users to manage tasks efficiently with features like adding, editing, marking completion, and deleting tasks.
 
-Currently, two official plugins are available:
+## 📖 Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Dependencies](#dependencies)
+- [Project Structure](#project-structure)
+- [Contributors](#contributors)
+- [License](#license)
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- 📝 **Create, Edit, and Delete Tasks**  
+- ✅ **Mark Tasks as Completed**  
+- 🔄 **Persistent Storage with React Query**  
+- 🎨 **Dark Mode Support**  
+- 📢 **Toast Notifications for Errors and Actions**  
 
-- Configure the top-level `parserOptions` property like this:
+## 🛠 Installation
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Prerequisites
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Ensure you have **Node.js** and **npm/yarn** installed.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/todo-app.git
+   cd todo-app
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Install dependencies:
+sh
+Copiar
+Editar
+npm install
+# or
+yarn install
+Start the development server:
+sh
+Copiar
+Editar
+npm run dev
+# or
+yarn dev
+🚀 Usage
+Log in to your account (authentication logic assumed).
+Add new tasks using the Create Task button.
+Edit or delete tasks as needed.
+Toggle task completion by clicking the checkmark (✔️).
+View tasks dynamically updated via React Query.
+⚙️ Configuration
+The application fetches tasks from the following API endpoint:
+
+bash
+Copiar
+Editar
+https://to-do-list-u0q3.onrender.com/tasks
+Ensure you set up authentication, as requests require a valid Bearer Token.
+
+📂 Project Structure
+css
+Copiar
+Editar
+/src
+│── components/
+│   ├── Header.tsx
+│   ├── CreateTask.tsx
+│   ├── EditTask.tsx
+│   ├── ExcludTaskAlert.tsx
+│   ├── Loading.tsx
+│── ui/
+│   ├── Table.tsx
+│   ├── Toggle.tsx
+│── App.tsx
+│── main.tsx
+│── index.css
+│── ...
+📦 Dependencies
+React (UI framework)
+TypeScript (Typed JavaScript)
+React Query (Data fetching and caching)
+Axios (HTTP requests)
+Lucide-React (Icons)
+Tailwind CSS (Styling)
+React-Toastify (Notifications)
+🤝 Contributors
+Your Name (@yourusername)
+📜 License
+This project is licensed under the MIT License.
